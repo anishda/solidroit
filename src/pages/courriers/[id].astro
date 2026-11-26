@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { relecture, sourceStatut, fmtDate } from '../../lib/labels';
+import { relecture, sourceStatut, fmtDate, splitSource } from '../../lib/labels';
 
 export async function getStaticPaths() {
   const entries = await getCollection('courriers');
@@ -10,45 +10,56 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
-const r = relecture[d.statut_relecture];
 ---
 <Base title={d.title} description={d.summary}>
-  <div class="wrap page"><article class="prose">
-    <div class="crumbs"><a href="/">Courriers types</a> › {d.organismes.join(', ')}</div>
+  <div class="wrap page">
+    <div class="crumbs"><a href="/">Courriers types</a> / {d.organismes.join(' · ')}</div>
     <h1>{d.title}</h1>
     <div class="meta">
-      <span class={`status ${d.statut_relecture}`}>{r.icon} {r.label}</span>
+      <span class={`stamp ${d.statut_relecture}`}>{relecture[d.statut_relecture].label}</span>
       <span>Sources vérifiées le {fmtDate(d.derniere_verification)}</span>
       <span>Relecteur : {d.relecteur}</span>
     </div>
-    {d.revue_ia && (
-      <div class="review" role="note">
-        <strong>Relecture IA juridique du {fmtDate(d.revue_ia.date)}</strong>
-        {d.revue_ia.resume} <em>Pas encore validé par un humain.</em>
+    <div class="layout">
+      <div>
+        {d.revue_ia && (
+          <div class="review">
+            <strong>Relecture IA du {fmtDate(d.revue_ia.date)}</strong>
+            {d.revue_ia.resume} Pas encore validé par un humain.
+          </div>
+        )}
+        <div class="md"><Content /></div>
       </div>
-    )}
-    <div class="md"><Content /></div>
-    <section class="panel">
-      <h2>Sources légales</h2>
-      <ul>
-        {d.sources_legales.map((s) => (
-          <li>
-            <span class={`status ${s.statut}`}>{sourceStatut[s.statut].icon} {sourceStatut[s.statut].label}</span>
-            <span>{s.url ? <a href={s.url}>{s.ref}</a> : s.ref}</span>
-            {s.note && <span class="note">{s.note}</span>}
-          </li>
-        ))}
-      </ul>
-    </section>
-    <section class="panel">
-      <h2>Liens officiels</h2>
-      <ul>{d.liens_officiels.map((l) => (<li><a href={l.url}>{l.label}</a></li>))}</ul>
-    </section>
-    {'courriers' in d && d.courriers.length > 0 && (
-      <section class="panel">
-        <h2>Courriers types liés</h2>
-        <ul>{d.courriers.map((c) => (<li><a href={`/courriers/${c}/`}>{c.replace(/-/g, ' ')}</a></li>))}</ul>
-      </section>
-    )}
-  </article></div>
+      <aside class="margin" aria-label="Sources">
+        <section>
+          <h2>Sources légales</h2>
+          <ul>
+            {d.sources_legales.map((s) => {
+              const x = splitSource(s.ref);
+              return (
+                <li>
+                  <div class="src-head">
+                    <span class="ref">{s.url ? <a href={s.url}>{x.ref}</a> : x.ref}</span>
+                    <span class={`stamp ${s.statut}`}>{sourceStatut[s.statut].label}</span>
+                  </div>
+                  {x.desc && <p class="src-desc">{x.desc}</p>}
+                  {s.note && <p class="src-note">{s.note}</p>}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+        <section>
+          <h2>Liens officiels</h2>
+          <ul>{d.liens_officiels.map((l) => (<li><a href={l.url}>{l.label}</a></li>))}</ul>
+        </section>
+        {'courriers' in d && d.courriers.length > 0 && (
+          <section>
+            <h2>Courriers types</h2>
+            <ul>{d.courriers.map((c) => (<li><a href={`/courriers/${c}/`}>{c.replace(/-/g, ' ')}</a></li>))}</ul>
+          </section>
+        )}
+      </aside>
+    </div>
+  </div>
 </Base>

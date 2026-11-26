@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { SITE_NAME } from '../site.config';
 interface Props { title: string; description?: string }
-const { title, description = 'Que faire en cas de problème avec la Sécu ou la CAF : parcours, textes de loi, courriers types.' } = Astro.props;
+const { title, description = 'Que faire en cas de problème avec la Sécu ou la CAF : démarches, textes de loi, courriers types.' } = Astro.props;
 const path = Astro.url.pathname;
 const full = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
 ---
@@ -16,29 +16,28 @@ const full = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
   </head>
   <body>
     <a class="skip" href="#contenu">Aller au contenu</a>
-    <div class="notice" role="note">
-      <div class="wrap"><strong>Information, pas conseil juridique.</strong> Site collaboratif non officiel, indépendant d'Ameli, des CPAM, de la Cramif et des CAF. Vérifiez toujours sur les sources officielles liées.</div>
-    </div>
     <header class="site-header">
       <div class="wrap">
-        <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">§</span>{SITE_NAME}</a>
+        <a class="brand" href="/">{SITE_NAME}</a>
         <nav class="nav" aria-label="Navigation principale">
           <a href="/" aria-current={path === '/' ? 'page' : undefined}>Situations</a>
           <a href="/contribuer/" aria-current={path.startsWith('/contribuer') ? 'page' : undefined}>Contribuer</a>
         </nav>
       </div>
+      <div class="wrap"><p class="disclaimer" role="note"><strong>Information, pas conseil juridique.</strong> Site collaboratif non officiel, indépendant d'Ameli, des CPAM, de la Cramif et des CAF. Vérifiez sur les sources officielles liées.</p></div>
     </header>
     <main id="contenu"><slot /></main>
     <footer class="site-footer">
-      <div class="wrap">Code sous AGPL-3.0, contenu sous CC BY-SA 4.0. Corrections et retours par Git (voir « Contribuer »).</div>
+      <div class="wrap">Code sous AGPL-3.0, contenu sous CC BY-SA 4.0. Corrections et retours par Git.</div>
     </footer>
     <script is:inline>
       document.querySelectorAll('.md pre').forEach((pre) => {
         const b = document.createElement('button');
-        b.type = 'button'; b.className = 'btn ghost copy'; b.textContent = 'Copier';
+        b.type = 'button'; b.className = 'copy'; b.textContent = 'Copier le courrier';
         b.addEventListener('click', async () => {
-          await navigator.clipboard.writeText(pre.innerText.replace(/Copier$/, '').trim());
-          b.textContent = 'Copié ✓'; setTimeout(() => (b.textContent = 'Copier'), 1800);
+          const t = pre.cloneNode(true); t.querySelector('.copy')?.remove();
+          await navigator.clipboard.writeText(t.textContent.trim());
+          b.textContent = 'Copié'; setTimeout(() => (b.textContent = 'Copier le courrier'), 1800);
         });
         pre.appendChild(b);
       });
