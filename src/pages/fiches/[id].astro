@@ -25,10 +25,23 @@ const d = entry.data;
         {d.revue_ia && (
           <div class="review">
             <strong>Relecture IA du {fmtDate(d.revue_ia.date)}</strong>
-            {d.revue_ia.resume} Pas encore validé par un humain.
+            {d.revue_ia.resume}
           </div>
         )}
-        <div class="md"><Content /></div>
+        {'delais' in d && d.delais.length > 0 && (
+          <section class="delais" aria-label="Délais à retenir">
+            <h2>Délais à retenir</h2>
+            <dl>
+              {d.delais.map((x) => (
+                <>
+                  <dt>{x.quoi}</dt>
+                  <dd><span class="delai">{x.delai}</span> <span class="ref">{x.ref}</span></dd>
+                </>
+              ))}
+            </dl>
+          </section>
+        )}
+        <div class="md steps"><Content /></div>
       </div>
       <aside class="margin" aria-label="Sources">
         <section>

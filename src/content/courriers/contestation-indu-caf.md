@@ -16,7 +16,7 @@ liens_officiels:
   - { label: "CAF", url: "https://www.caf.fr" }
 ---
 
-Envoi : **lettre recommandée avec accusé de réception**, dans les **2 mois** de la notification. Remplacez tout ce qui est entre crochets et supprimez les options inutiles.
+Envoi : lettre recommandée avec accusé de réception, dans les 2 mois de la notification. Remplacez tout ce qui est entre crochets et supprimez les options inutiles.
 
 ```
 [Prénom NOM]

@@ -87,8 +87,29 @@ h2.section { font-size: 1.25rem; margin: 48px 0 8px; padding-bottom: 8px; border
 .ref { font: 500 .875rem var(--mono); }
 .src-desc { color: var(--ink-2); margin: 4px 0 0; }
 .src-note { color: var(--ink-3); font-size: .8125rem; margin: 4px 0 0; }
-.review { margin: 0 0 32px; padding-left: 16px; border-left: 2px solid var(--accent); font-size: .95rem; color: var(--ink-2); }
+.review { margin: 0 0 32px; padding-left: 16px; border-left: 2px solid var(--accent); font-size: .9rem; line-height: 1.55; color: var(--ink-2); max-width: 36rem; }
 .review strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; }
 .site-footer { border-top: 1px solid var(--line); color: var(--ink-3); font-size: .875rem; padding: 24px 0 48px; }
 @media print { .site-header, .site-footer, .copy, .margin { display: none; } body { background: #fff; color: #000; } .md pre { border: 0; padding: 0; } }
 .md pre code { font: inherit; }
+
+/* Délais clés en tête de fiche */
+.delais { margin: 0 0 40px; padding: 16px 20px; background: var(--sheet); border: 1px solid var(--line); border-radius: 4px; }
+.delais h2 { font: 600 .8125rem var(--sans); color: var(--ink-2); margin: 0 0 8px; }
+.delais dl { margin: 0; display: grid; grid-template-columns: 1fr; }
+.delais dt { margin: 12px 0 0; color: var(--ink-2); font-size: .9375rem; }
+.delais dd { margin: 2px 0 0; }
+.delais .delai { font: 500 1.125rem var(--serif); }
+.delais .ref { margin-left: 8px; }
+
+/* Étapes numérotées */
+.steps { counter-reset: step; }
+.steps h2 { display: flex; align-items: baseline; gap: 12px; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.steps h2::before { counter-increment: step; content: counter(step); font: 500 .9375rem var(--mono); color: var(--accent); min-width: 1.25rem; }
+.steps h2:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.steps p { margin: 0 0 16px; }
+.steps ul, .steps ol { margin: 0 0 16px; }
+/* Dernière section : points non vérifiés, en retrait */
+.steps h2:last-of-type { font-size: 1rem; color: var(--ink-2); }
+.steps h2:last-of-type::before { content: none; }
+.steps h2:last-of-type ~ ul { color: var(--ink-2); font-size: .9375rem; }

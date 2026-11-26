@@ -12,6 +12,9 @@ const sourceLegale = z.object({
   note: z.string().optional(),
 });
 
+// Délai clé affiché en tête de fiche, avec son article.
+const delai = z.object({ quoi: z.string(), delai: z.string(), ref: z.string() });
+
 const lienOfficiel = z.object({ label: z.string(), url });
 
 // Résumé court de la relecture IA juridique (avant validation humaine).
@@ -47,6 +50,7 @@ const fiches = defineCollection({
       ...commun,
       situation: z.string(), // ex. « arrêt de travail refusé »
       courriers: z.array(z.string()).default([]), // ids de modèles de courrier liés
+      delais: z.array(delai).default([]),
     })
     .refine(humainRequis, msg),
 });
