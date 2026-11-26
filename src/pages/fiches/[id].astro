@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('fiches');
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const fmt = (x: Date) => x.toISOString().slice(0, 10);
+---
+<Base title={d.title}>
+  <h1>{d.title}</h1>
+  <p class="meta">
+    Organismes : {d.organismes.join(', ')} · Dernière vérification : {fmt(d.derniere_verification)} ·
+    Relecteur : {d.relecteur} · <span class={`badge ${d.statut_relecture}`}>{d.statut_relecture}</span>
+  </p>
+  {d.revue_ia && (
+    <div class="disclaimer">
+      <strong>Relecture IA juridique ({fmt(d.revue_ia.date)}) — {d.revue_ia.verdict}.</strong>
+      {' '}{d.revue_ia.resume} <em>Non validé par un humain tant que le statut n'est pas « valide_humain ».</em>
+    </div>
+  )}
+  <Content />
+  <h2>Sources légales</h2>
+  <ul>
+    {d.sources_legales.map((s) => (
+      <li>
+        {s.url ? <a href={s.url}>{s.ref}</a> : s.ref}
+        <span class={`badge ${s.statut}`}>{s.statut === 'verifie' ? 'vérifié' : 'à vérifier'}</span>
+        {s.note && <span class="meta"> — {s.note}</span>}
+      </li>
+    ))}
+  </ul>
+  <h2>Liens officiels</h2>
+  <ul>{d.liens_officiels.map((l) => (<li><a href={l.url}>{l.label}</a></li>))}</ul>
+  {'courriers' in d && d.courriers.length > 0 && (
+    <>
+      <h2>Courriers types</h2>
+      <ul>{d.courriers.map((c) => (<li><a href={`/courriers/${c}/`}>{c}</a></li>))}</ul>
+    </>
+  )}
+</Base>
