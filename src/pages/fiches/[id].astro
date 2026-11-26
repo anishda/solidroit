@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { relecture, sourceStatut, fmtDate } from '../../lib/labels';
 
 export async function getStaticPaths() {
   const entries = await getCollection('fiches');
@@ -9,37 +10,45 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
-const fmt = (x: Date) => x.toISOString().slice(0, 10);
+const r = relecture[d.statut_relecture];
 ---
-<Base title={d.title}>
-  <h1>{d.title}</h1>
-  <p class="meta">
-    Organismes : {d.organismes.join(', ')} · Dernière vérification : {fmt(d.derniere_verification)} ·
-    Relecteur : {d.relecteur} · <span class={`badge ${d.statut_relecture}`}>{d.statut_relecture}</span>
-  </p>
-  {d.revue_ia && (
-    <div class="disclaimer">
-      <strong>Relecture IA juridique ({fmt(d.revue_ia.date)}) — {d.revue_ia.verdict}.</strong>
-      {' '}{d.revue_ia.resume} <em>Non validé par un humain tant que le statut n'est pas « valide_humain ».</em>
+<Base title={d.title} description={d.summary}>
+  <div class="wrap page"><article class="prose">
+    <div class="crumbs"><a href="/">Situations</a> › {d.organismes.join(', ')}</div>
+    <h1>{d.title}</h1>
+    <div class="meta">
+      <span class={`status ${d.statut_relecture}`}>{r.icon} {r.label}</span>
+      <span>Sources vérifiées le {fmtDate(d.derniere_verification)}</span>
+      <span>Relecteur : {d.relecteur}</span>
     </div>
-  )}
-  <Content />
-  <h2>Sources légales</h2>
-  <ul>
-    {d.sources_legales.map((s) => (
-      <li>
-        {s.url ? <a href={s.url}>{s.ref}</a> : s.ref}
-        <span class={`badge ${s.statut}`}>{s.statut === 'verifie' ? 'vérifié' : 'à vérifier'}</span>
-        {s.note && <span class="meta"> — {s.note}</span>}
-      </li>
-    ))}
-  </ul>
-  <h2>Liens officiels</h2>
-  <ul>{d.liens_officiels.map((l) => (<li><a href={l.url}>{l.label}</a></li>))}</ul>
-  {'courriers' in d && d.courriers.length > 0 && (
-    <>
-      <h2>Courriers types</h2>
-      <ul>{d.courriers.map((c) => (<li><a href={`/courriers/${c}/`}>{c}</a></li>))}</ul>
-    </>
-  )}
+    {d.revue_ia && (
+      <div class="review" role="note">
+        <strong>Relecture IA juridique du {fmtDate(d.revue_ia.date)}</strong>
+        {d.revue_ia.resume} <em>Pas encore validé par un humain.</em>
+      </div>
+    )}
+    <div class="md"><Content /></div>
+    <section class="panel">
+      <h2>Sources légales</h2>
+      <ul>
+        {d.sources_legales.map((s) => (
+          <li>
+            <span class={`status ${s.statut}`}>{sourceStatut[s.statut].icon} {sourceStatut[s.statut].label}</span>
+            <span>{s.url ? <a href={s.url}>{s.ref}</a> : s.ref}</span>
+            {s.note && <span class="note">{s.note}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>Liens officiels</h2>
+      <ul>{d.liens_officiels.map((l) => (<li><a href={l.url}>{l.label}</a></li>))}</ul>
+    </section>
+    {'courriers' in d && d.courriers.length > 0 && (
+      <section class="panel">
+        <h2>Courriers types liés</h2>
+        <ul>{d.courriers.map((c) => (<li><a href={`/courriers/${c}/`}>{c.replace(/-/g, ' ')}</a></li>))}</ul>
+      </section>
+    )}
+  </article></div>
 </Base>

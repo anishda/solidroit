@@ -1,24 +1,49 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../site.config';
+import { relecture } from '../lib/labels';
 const fiches = (await getCollection('fiches')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'fr'));
 const courriers = (await getCollection('courriers')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'fr'));
 ---
-<Base title="Accueil">
-  <h1>Que faire en cas de problème avec la Sécu ou la CAF ?</h1>
-  <p>Parcours par situation, textes de loi cités, liens officiels et courriers types.</p>
-  <h2>Situations</h2>
-  <ul>
-    {fiches.map((f) => (
-      <li>
-        <a href={`/fiches/${f.id}/`}>{f.data.title}</a>
-        <span class={`badge ${f.data.statut_relecture}`}>{f.data.statut_relecture}</span>
-        <div class="meta">{f.data.summary}</div>
-      </li>
-    ))}
-  </ul>
-  <h2>Courriers types</h2>
-  <ul>
-    {courriers.map((c) => (<li><a href={`/courriers/${c.id}/`}>{c.data.title}</a></li>))}
-  </ul>
+<Base title={SITE_NAME}>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Un souci avec la Sécu ou la CAF ? Voyons ce qu'on peut faire.</h1>
+      <p>Des parcours clairs par situation, les textes de loi cités, les liens officiels et des courriers prêts à envoyer. Fait par et pour les usagers.</p>
+    </section>
+
+    <h2 class="section">Choisissez votre situation</h2>
+    <ul class="grid">
+      {fiches.map((f) => (
+        <li>
+          <a class="card" href={`/fiches/${f.id}/`}>
+            <div class="chips">{f.data.organismes.map((o) => <span class="chip">{o}</span>)}</div>
+            <h3>{f.data.title}</h3>
+            <p>{f.data.summary}</p>
+            <span class={`status ${f.data.statut_relecture}`}>{relecture[f.data.statut_relecture].icon} {relecture[f.data.statut_relecture].label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="section">Courriers types</h2>
+    <ul class="grid">
+      {courriers.map((c) => (
+        <li>
+          <a class="card" href={`/courriers/${c.id}/`}>
+            <div class="chips">{c.data.organismes.map((o) => <span class="chip">{o}</span>)}</div>
+            <h3>{c.data.title.replace(/^Modèle : /, '')}</h3>
+            <p>{c.data.summary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <section class="cta">
+      <h2>Une erreur, un retour d'expérience ?</h2>
+      <p>Chaque fiche cite ses sources et sa date de vérification. Aidez à les garder justes et à jour.</p>
+      <a class="btn" href="/contribuer/">Contribuer</a>
+    </section>
+  </div>
 </Base>
