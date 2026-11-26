@@ -10,19 +10,27 @@ courriers: [reclamation-indemnites-journalieres]
 revue_ia:
   date: 2026-11-26
   verdict: douteux
-  resume: "L332-1 (2 ans, point de départ au 1er jour du trimestre suivant) concorde avec le miroir DILA. Non vérifiés : effet du silence de la caisse, accusé de réception (CRPA L112-3) et distinction avec les remboursements de soins."
+  resume: "L332-1, L142-4, R142-1, R142-6 et CRPA L112-3 relus sur codes.droit.org (à jour au 2026-11-20). Reste à confirmer : effet du silence de la caisse sur une simple demande de paiement (R142-6 ne vise que la réclamation devant la CRA) et régime des remboursements de soins."
 sources_legales:
-  - ref: "Code de la sécurité sociale, art. L332-1 (prescription de 2 ans des prestations maladie)"
+  - ref: "Code de la sécurité sociale, art. L332-1 (prescription de 2 ans des prestations en espèces maladie)"
     url: https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006073189
     statut: verifie
-    note: "Vérifié via miroir DILA : point de départ au 1er jour du trimestre suivant celui visé par les prestations"
+    note: "Vérifié sur codes.droit.org (données API Légifrance, code à jour au 2026-11-20) ; point de départ au 1er jour du trimestre suivant celui visé"
+  - ref: "Code de la sécurité sociale, art. L142-4 (recours préalable obligatoire)"
+    url: https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006073189
+    statut: verifie
+    note: "Vérifié sur codes.droit.org (données API Légifrance, code à jour au 2026-11-20)"
   - ref: "Code de la sécurité sociale, art. R142-1 (commission de recours amiable, 2 mois)"
     url: https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006073189
     statut: verifie
-    note: "Vérifié via miroir DILA ; la décision contestée doit exister (refus explicite)"
+    note: "Vérifié sur codes.droit.org (données API Légifrance, code à jour au 2026-11-20)"
+  - ref: "Code de la sécurité sociale, art. R142-6 (silence de 2 mois = rejet)"
+    url: https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006073189
+    statut: verifie
+    note: "Vérifié sur codes.droit.org (données API Légifrance, code à jour au 2026-11-20) ; ne vise que la réclamation devant la CRA, pas le silence de la caisse sur une demande"
   - ref: "Code des relations entre le public et l'administration, art. L112-3 (accusé de réception des demandes)"
-    statut: a_verifier
-    note: "Cité de mémoire, non vérifié"
+    statut: verifie
+    note: "Vérifié sur codes.droit.org (CRPA) ; exceptions prévues (demandes abusives, etc.)"
 liens_officiels:
   - { label: "Ameli — compte assuré", url: "https://www.ameli.fr" }
   - { label: "Service-Public — Assurance maladie", url: "https://www.service-public.fr" }
@@ -48,10 +56,10 @@ L'action de l'assuré en paiement des prestations en espèces se prescrit par **
 
 ## 5. Si la caisse refuse
 
-Contestez devant la **CRA dans les 2 mois** de la notification du refus — *CSS, R142-1*. L'effet d'un simple silence de la caisse n'est **pas vérifié** ici : demandez une décision écrite.
+Le recours préalable devant la **CRA** est obligatoire et doit être formé **dans les 2 mois** de la notification du refus — *CSS, L142-4 et R142-1*. Sans réponse de la CRA dans les 2 mois de la réception de votre réclamation, vous pouvez la considérer comme rejetée — *CSS, R142-6*. L'effet d'un simple silence de la caisse sur une demande de paiement n'est **pas vérifié** ici : demandez une décision écrite.
 
 ## Points non vérifiés
 
 - Effet juridique d'une absence de réponse de la caisse.
-- Obligation d'accusé de réception (CRPA).
+- Portée de l'accusé de réception (CRPA L112-3 : exceptions possibles).
 - Cas des remboursements de soins (régime différent des indemnités journalières).
